@@ -1,5 +1,5 @@
 const GameStateEnum = Object.freeze({
-  INICIO: 'INICIO',
+  INICIO: 'START',
   EN_JUEGO: 'EN_JUEGO',
   TERMINADO: 'TERMINADO',
 });

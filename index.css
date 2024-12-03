@@ -1,0 +1,46 @@
+/* Reset de Estilos Básicos */
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif; /* Establecer una fuente por defecto */
+  background-color: #f4f4f4; /* Fondo neutro */
+}
+
+html, body {
+  height: 100%;
+  width: 100%;
+}
+
+a {
+  text-decoration: none; /* Elimina el subrayado de los enlaces */
+  color: inherit; /* Hereda el color del texto */
+}
+
+ul, ol {
+  list-style: none; /* Elimina los puntos de las listas */
+}
+
+button {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+input, textarea {
+  outline: none; /* Elimina el borde de enfoque de los elementos de formulario */
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+/* Otros resets pueden ser agregados según sea necesario */
