@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { GameContext } from './hooks/gameContext';
-import GameStateEnum from './utils/enumGameState';
+import { GameState } from './utils/enumGame';
 import GameStart from './components/GameStart';
 import GamePlay from './components/GamePlay';
 import GameEnd from './components/GameEnd';
@@ -45,9 +45,9 @@ const App = () => {
         overflow: 'hidden',
         fontFamily: 'Arial, sans-serif',
       }}>
-      {gameState === GameStateEnum.INICIO && <GameStart />}
-      {gameState === GameStateEnum.EN_JUEGO && <GamePlay />}
-      {gameState === GameStateEnum.TERMINADO && <GameEnd />}
+      {gameState === GameState.START && <GameStart />}
+      {gameState === GameState.IN_GAME && <GamePlay />}
+      {gameState === GameState.END && <GameEnd />}
     </div>
   );
 };

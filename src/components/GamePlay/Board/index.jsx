@@ -5,14 +5,20 @@ import useSound from 'use-sound';
 import flipSound from '../../../assets/sounds/240776__f4ngy__card-flip.wav';
 import matchSound from '../../../assets/sounds/62996__radian__chime-0019.wav';
 import gameCompleteSound from '../../../assets/sounds/741977__victor_natas__victory-sting-5.wav';
-import GameStateEnum from '../../../utils/enumGameState';
 import { getImagesFromPixabay } from '../../../services';
-import GameDifficultyEnum from '../../../utils/enumGameDifficulty';
+import { GameDifficulty, GameState } from '../../../utils/enumGame';
 import styled from 'styled-components';
 
 const Board = ({ setGameState, time }) => {
-  const { selectedTheme, selectedDifficulty, setScore, score, setGameTime } =
-    useContext(GameContext);
+  const {
+    selectedTheme,
+    selectedDifficulty,
+    setGameTime,
+    setScorePlayer1,
+    setScorePlayer2,
+    currentPlayer,
+    setCurrentPlayer,
+  } = useContext(GameContext);
   const [cards, setCards] = useState([]);
   const [flippedIndexes, setFlippedIndexes] = useState([]);
   const [playFlip] = useSound(flipSound);
@@ -20,37 +26,27 @@ const Board = ({ setGameState, time }) => {
   const [playGameComplete] = useSound(gameCompleteSound);
 
   // Función para obtener las imágenes de Pixabay
-  const fetchImages = theme => {
-    return getImagesFromPixabay(theme);
-  };
+  const fetchImages = theme => getImagesFromPixabay(theme);
 
   // Función para mapear las imágenes a cartas
   const mapImagesToCards = images => {
     return images.map(image => ({
-      emoji: image, // Usamos la URL de la imagen como 'emoji'
+      emoji: image,
       flipped: false,
       removed: false,
     }));
   };
 
   const getBoardSize = () => {
-    if (selectedDifficulty === GameDifficultyEnum.EASY) {
-      return 4;
-    } else if (selectedDifficulty === GameDifficultyEnum.MEDIUM) {
-      return 5;
-    } else {
-      return 8;
-    }
+    if (selectedDifficulty === GameDifficulty.EASY) return 4;
+    if (selectedDifficulty === GameDifficulty.MEDIUM) return 5;
+    return 8;
   };
 
   // Función para seleccionar las cartas basadas en el tamaño del tablero
   const selectCardsForBoardSize = (imageCards, boardSize) => {
-    if (boardSize === 8) {
-      return imageCards;
-    }
-    if (boardSize === 5) {
-      return imageCards.slice(0, 12);
-    }
+    if (boardSize === 8) return imageCards;
+    if (boardSize === 5) return imageCards.slice(0, 12);
     return imageCards.slice(0, boardSize * 2);
   };
 
@@ -73,20 +69,22 @@ const Board = ({ setGameState, time }) => {
     setCards(newCards);
 
     if (newFlippedIndexes.length === 2) {
-      setTimeout(() => {
-        checkMatch(newFlippedIndexes);
-      }, 1000);
+      setTimeout(() => checkMatch(newFlippedIndexes), 1000);
     }
   };
 
   const checkMatch = ([firstIndex, secondIndex]) => {
     if (cards[firstIndex].emoji === cards[secondIndex].emoji) {
-      setScore(score + 1);
+      if (currentPlayer === 1) {
+        setScorePlayer1(score => score + 1);
+      } else {
+        setScorePlayer2(score => score + 1);
+      }
       playMatch();
 
       const newCards = cards.map((card, i) => {
         if (i === firstIndex || i === secondIndex) {
-          return { ...card, removed: true, matched: true }; // Se marca como 'matched'
+          return { ...card, removed: true, matched: true };
         }
         return card;
       });
@@ -99,6 +97,9 @@ const Board = ({ setGameState, time }) => {
           : card,
       );
       setCards(newCards);
+
+      // Cambiar el turno al otro jugador
+      setCurrentPlayer(currentPlayer === 1 ? 2 : 1);
     }
 
     setFlippedIndexes([]);
@@ -122,10 +123,9 @@ const Board = ({ setGameState, time }) => {
   }, [selectedTheme]);
 
   useEffect(() => {
-    // cards.length > 0 && cards.every(card => card.flipped || card.removed))
-    if (true) {
+    if (cards.length > 0 && cards.every(card => card.flipped || card.removed)) {
       // playGameComplete();
-      setGameState(GameStateEnum.TERMINADO);
+      setGameState(GameState.END);
       setGameTime(time);
     }
   }, [cards, playGameComplete, setGameState]);

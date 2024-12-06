@@ -1,29 +1,28 @@
 import React, { useContext } from 'react';
 import styled from 'styled-components';
-import GameStateEnum from '../../utils/enumGameState';
+import { GameState, GameTheme } from '../../utils/enumGame';
 import { GameContext } from '../../hooks/gameContext';
 import { colors } from '../../constants/Colors';
 import dogImage from '../../assets/images/animals/dog.jpg';
 import apples from '../../assets/images/apples.jpg';
 import train from '../../assets/images/train.jpg';
 import home from '../../assets/images/home.jpg';
-import GameThemeEnum from '../../utils/enumGameTheme';
 
 const GameEnd = () => {
   const { setGameState, setScore, gameTime, selectedTheme } =
     useContext(GameContext);
 
   const selectorImage = () => {
-    if (selectedTheme === GameThemeEnum.ANIMALS) {
+    if (selectedTheme === GameTheme.ANIMALS) {
       return dogImage;
     }
-    if (selectedTheme === GameThemeEnum.FRUITS) {
+    if (selectedTheme === GameTheme.FRUITS) {
       return apples;
     }
-    if (selectedTheme === GameThemeEnum.TRANSPORT) {
+    if (selectedTheme === GameTheme.TRANSPORT) {
       return train;
     }
-    if (selectedTheme === GameThemeEnum.HOUSE_INTERIOR) {
+    if (selectedTheme === GameTheme.HOUSE_INTERIOR) {
       return home;
     }
   };
@@ -39,12 +38,12 @@ const GameEnd = () => {
         <ButtonGroup>
           <Button
             onClick={() => {
-              setGameState(GameStateEnum.EN_JUEGO);
+              setGameState(GameState.IN_GAME);
               setScore(0);
             }}>
             PLAY AGAIN
           </Button>
-          <Button onClick={() => setGameState(GameStateEnum.INICIO)}>
+          <Button onClick={() => setGameState(GameState.START)}>
             GO TO BACK MENU
           </Button>
         </ButtonGroup>
