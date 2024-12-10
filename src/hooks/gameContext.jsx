@@ -6,15 +6,43 @@ export const GameContext = createContext(null);
 
 export const GameProvider = ({ children }) => {
   const [gameState, setGameState] = useState(GameState.START);
-  const [selectedTheme, setSelectedTheme] = useState(null);
+  const [selectedTheme, setSelectedTheme] = useState('');
   const [selectedDifficulty, setSelectedDifficulty] = useState(
     GameDifficulty.EASY,
   );
-  const [scorePlayer1, setScorePlayer1] = useState(0); // Puntaje jugador 1
-  const [scorePlayer2, setScorePlayer2] = useState(0); // Puntaje jugador 2
   const [gameTime, setGameTime] = useState('');
   const [selectedMode, setSelectedMode] = useState(GameMode.SINGLE);
-  const [currentPlayer, setCurrentPlayer] = useState(1); // 1 para Jugador 1, 2 para Jugador 2
+  const [players, setPlayers] = useState([
+    { id: 1, score: 0, emoji: '' },
+    { id: 2, score: 0, emoji: '' },
+  ]);
+  const [currentPlayer, setCurrentPlayer] = useState(1);
+
+  const emojiMapping = {
+    animals: ['🐶', '🐱'],
+    fruits: ['🍎', '🍌'],
+    transport: ['🚗', '🚂'],
+    house_interior: ['🏠', '🛋️'],
+    default: ['🤔', '🤔'],
+  };
+
+  const updatePlayerEmojiByTheme = theme => {
+    const newEmojis = emojiMapping[theme] || emojiMapping.default;
+    setPlayers(prevPlayers =>
+      prevPlayers.map((player, index) => ({
+        ...player,
+        emoji: newEmojis[index],
+      })),
+    );
+  };
+
+  const updatePlayerScore = (playerId, newScore) => {
+    setPlayers(prevPlayers =>
+      prevPlayers.map(player =>
+        player.id === playerId ? { ...player, score: newScore } : player,
+      ),
+    );
+  };
 
   return (
     <GameContext.Provider
@@ -22,19 +50,21 @@ export const GameProvider = ({ children }) => {
         gameState,
         setGameState,
         selectedTheme,
-        setSelectedTheme,
+        setSelectedTheme: theme => {
+          setSelectedTheme(theme);
+          updatePlayerEmojiByTheme(theme);
+        },
         selectedDifficulty,
         setSelectedDifficulty,
-        scorePlayer1,
-        setScorePlayer1,
-        scorePlayer2,
-        setScorePlayer2,
         gameTime,
         setGameTime,
         selectedMode,
         setSelectedMode,
+        players,
+        setPlayers,
         currentPlayer,
         setCurrentPlayer,
+        updatePlayerScore,
       }}>
       {children}
     </GameContext.Provider>

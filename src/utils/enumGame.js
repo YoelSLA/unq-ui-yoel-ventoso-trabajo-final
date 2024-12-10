@@ -13,7 +13,7 @@ export const GameState = Object.freeze({
 export const GameTheme = Object.freeze({
   ANIMALS: 'animals',
   FRUITS: 'fruits',
-  HOUSE_INTERIOR: 'house interior',
+  HOUSE_INTERIOR: 'house_interior',
   TRANSPORT: 'transport',
 });
 

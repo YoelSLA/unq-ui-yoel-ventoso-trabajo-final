@@ -11,6 +11,9 @@ export const colors = {
   outline: '#00000040',
   surfaceContainerAlternative: '#666666',
   error: '#FF0000',
-  border: '#00000040',
   number: '#00000099',
+  border: '#000',
+  shadow: '#000',
+  boxLeft: '#87CEFA',
+  boxRight: '#8A2BE2'
 };

@@ -1,13 +1,14 @@
 import React from 'react';
 import styled from 'styled-components';
-import memotestImage from '../../../assets/images/memotest.png';
+import memotestImage from '../../assets/images/memotest.png';
 
 const Card = ({ emoji, flipped, removed, onClick }) => {
   return (
     <CardWrapper
       onClick={onClick}
-      style={{ visibility: removed ? 'hidden' : 'visible' }}>
-      <CardInner className={flipped ? 'flipped' : ''}>
+      style={{ visibility: removed ? 'hidden' : 'visible' }}
+      matched={true}>
+      <CardInner className={true ? 'flipped' : ''}>
         <CardFront>
           <img
             src={emoji.emoji}
@@ -26,16 +27,10 @@ export default Card;
 export const CardWrapper = styled.div`
   width: 100%;
   height: 100%;
-  position: relative;
   cursor: pointer;
-  border: 1px solid #ccc;
-  border-radius: 8px;
   box-sizing: border-box;
-
-  &.matched {
-    border: 3px solid black; /* Borde negro cuando haya un match */
-    background-color: rgba(0, 255, 0, 0.1); /* Fondo con un tono sutil */
-  }
+  border-radius: 5px;
+  border: 2px solid black;
 `;
 
 export const CardInner = styled.div`
@@ -49,10 +44,6 @@ export const CardInner = styled.div`
   &.flipped {
     transform: rotateY(180deg);
   }
-
-  &.matched {
-    pointer-events: none; /* Desactiva la interacción con la carta una vez que se hace el match */
-  }
 `;
 
 export const CardFace = styled.div`
@@ -65,15 +56,9 @@ export const CardFace = styled.div`
   align-items: center;
   justify-content: center;
   font-size: 2.5rem;
-  border: 1px solid #ccc;
-
-  &.matched {
-    opacity: 0.6; /* Cambia la opacidad para indicar el estado */
-  }
 `;
 
 export const CardFront = styled(CardFace)`
-  background-color: #fff;
   transform: rotateY(180deg);
 `;
 
@@ -84,4 +69,5 @@ export const CardBack = styled(CardFace)`
   transform: rotateY(0deg);
   background-repeat: no-repeat;
   background-color: #ccc;
+  border-radius: 5px;
 `;

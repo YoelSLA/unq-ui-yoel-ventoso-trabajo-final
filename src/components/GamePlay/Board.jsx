@@ -1,29 +1,37 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { GameContext } from '../../../hooks/gameContext';
-import Card from '../Card';
+import { GameContext } from '../../hooks/GameContext';
+import Card from './Card';
 import useSound from 'use-sound';
-import flipSound from '../../../assets/sounds/240776__f4ngy__card-flip.wav';
-import matchSound from '../../../assets/sounds/62996__radian__chime-0019.wav';
-import gameCompleteSound from '../../../assets/sounds/741977__victor_natas__victory-sting-5.wav';
-import { getImagesFromPixabay } from '../../../services';
-import { GameDifficulty, GameState } from '../../../utils/enumGame';
+import flipSound from '../../assets/sounds/240776__f4ngy__card-flip.wav';
+import matchSound from '../../assets/sounds/62996__radian__chime-0019.wav';
+import gameCompleteSound from '../../assets/sounds/741977__victor_natas__victory-sting-5.wav';
+import { getImagesFromPixabay } from '../../services';
+import { GameDifficulty, GameState } from '../../utils/enumGame';
 import styled from 'styled-components';
 
-const Board = ({ setGameState, time }) => {
+const Board = ({ setMatchedPairs, setIsDraw }) => {
   const {
     selectedTheme,
     selectedDifficulty,
-    setGameTime,
-    setScorePlayer1,
-    setScorePlayer2,
-    currentPlayer,
+    setPlayers,
+    players,
+    setGameState,
     setCurrentPlayer,
+    currentPlayer,
+    gameState,
   } = useContext(GameContext);
   const [cards, setCards] = useState([]);
   const [flippedIndexes, setFlippedIndexes] = useState([]);
   const [playFlip] = useSound(flipSound);
   const [playMatch] = useSound(matchSound);
   const [playGameComplete] = useSound(gameCompleteSound);
+  const [allCardsFlippedOrRemoved, setAllCardsFlippedOrRemoved] =
+    useState(false);
+
+  useEffect(() => {
+    const totalMatchedPairs = cards.filter(card => card.matched).length / 2;
+    setMatchedPairs(totalMatchedPairs); // Levantar el estado hacia GamePlay
+  }, [cards, setMatchedPairs]);
 
   // Función para obtener las imágenes de Pixabay
   const fetchImages = theme => getImagesFromPixabay(theme);
@@ -75,11 +83,14 @@ const Board = ({ setGameState, time }) => {
 
   const checkMatch = ([firstIndex, secondIndex]) => {
     if (cards[firstIndex].emoji === cards[secondIndex].emoji) {
-      if (currentPlayer === 1) {
-        setScorePlayer1(score => score + 1);
-      } else {
-        setScorePlayer2(score => score + 1);
-      }
+      // Actualizar el puntaje del jugador actual
+      setPlayers(prevPlayers =>
+        prevPlayers.map(player =>
+          player.id === players[currentPlayer - 1].id
+            ? { ...player, score: player.score + 1 }
+            : player,
+        ),
+      );
       playMatch();
 
       const newCards = cards.map((card, i) => {
@@ -123,12 +134,29 @@ const Board = ({ setGameState, time }) => {
   }, [selectedTheme]);
 
   useEffect(() => {
-    if (cards.length > 0 && cards.every(card => card.flipped || card.removed)) {
-      // playGameComplete();
-      setGameState(GameState.END);
-      setGameTime(time);
+    const timer = setTimeout(() => {
+      setAllCardsFlippedOrRemoved(
+        cards.length > 0 && cards.every(card => card.flipped || card.removed),
+      );
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, [cards]);
+
+  useEffect(() => {
+    if (!allCardsFlippedOrRemoved) return;
+
+    const player1Score = players[0].score;
+    const player2Score = players[1].score;
+
+    if (gameState !== GameState.END) {
+      if (player1Score === player2Score) {
+        setIsDraw(true);
+      } else {
+        setGameState(GameState.END);
+      }
     }
-  }, [cards, playGameComplete, setGameState]);
+  }, [allCardsFlippedOrRemoved, players, setIsDraw, gameState]);
 
   const boardSize = getBoardSize();
 
