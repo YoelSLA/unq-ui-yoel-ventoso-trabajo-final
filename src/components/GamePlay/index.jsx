@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { GameContext } from '../../hooks/GameContext';
 import styled from 'styled-components';
 import { GameMode } from '../../utils/enumGame';
@@ -6,11 +6,29 @@ import GameStatus from './GameSatus';
 import Board from './Board';
 import TurnStatus from './TurnStatus';
 import { colors } from '../../constants/Colors';
+import { styles } from '../../constants/Styles';
 
 const GamePlay = () => {
-  const { selectedMode, updatePlayerScore, gameTime } = useContext(GameContext);
+  const { selectedMode, updatePlayerScore } = useContext(GameContext);
   const [matchedPairs, setMatchedPairs] = useState(0);
   const [isDraw, setIsDraw] = useState(false);
+  const [time, setTime] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTime(prevTime => prevTime + 1);
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  const formatTime = seconds => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes.toString().padStart(2, '0')}:${remainingSeconds
+      .toString()
+      .padStart(2, '0')}`;
+  };
 
   const resetScores = () => {
     updatePlayerScore(1, 0);
@@ -21,7 +39,7 @@ const GamePlay = () => {
     <GamePlayContainer>
       {isDraw ? (
         <Contenedor>
-          <h2>¡Es un empate!</h2>
+          <h2>{"¡It's a tie!"}</h2>
           <Button
             onClick={() => {
               resetScores();
@@ -32,12 +50,15 @@ const GamePlay = () => {
         </Contenedor>
       ) : (
         <>
-          <GameStatus matchedPairs={matchedPairs} />
+          <GameStatus
+            matchedPairs={matchedPairs}
+            time={formatTime(time)}
+          />
           <BoardContainer>
             <Board
               setMatchedPairs={setMatchedPairs}
               setIsDraw={setIsDraw}
-              time={gameTime}
+              time={time}
             />
           </BoardContainer>
           {selectedMode === GameMode.MULTIPLAYER && <TurnStatus />}
@@ -57,14 +78,14 @@ export const GamePlayContainer = styled.div`
 
 const BoardContainer = styled.div`
   padding: 10px;
-  border: 2px solid #fff;
+  border: ${styles.borderSize} solid ${colors.border};
   border-radius: 20px;
   box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.5);
 `;
 
 const Contenedor = styled.div`
   padding: 10px;
-  border: 2px solid #fff;
+  border: ${styles.borderSize} solid ${colors.border};
   border-radius: 20px;
   box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.5);
   background-color: #fff;

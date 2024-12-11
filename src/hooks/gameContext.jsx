@@ -8,10 +8,10 @@ export const GameProvider = ({ children }) => {
   const [gameState, setGameState] = useState(GameState.START);
   const [selectedTheme, setSelectedTheme] = useState('');
   const [selectedDifficulty, setSelectedDifficulty] = useState(
-    GameDifficulty.EASY,
+    GameDifficulty.HARD,
   );
   const [gameTime, setGameTime] = useState('');
-  const [selectedMode, setSelectedMode] = useState(GameMode.SINGLE);
+  const [selectedMode, setSelectedMode] = useState(GameMode.MULTIPLAYER);
   const [players, setPlayers] = useState([
     { id: 1, score: 0, emoji: '' },
     { id: 2, score: 0, emoji: '' },

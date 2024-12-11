@@ -5,6 +5,7 @@ import { GameDifficulty, GameState, GameMode } from '../../utils/enumGame';
 import { colors } from '../../constants/Colors';
 import SelectionButtonGroup from './SelectionButtonGroup';
 import CardSelector from './CardSelector';
+import { styles } from '../../constants/Styles';
 
 const GameStart = () => {
   const {
@@ -48,11 +49,11 @@ export default GameStart;
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 5px;
 `;
 
 const Header = styled.div`
-  border: 2px solid ${colors.onSurfaceContainer};
+  border: ${styles.borderSize} solid ${colors.onSurfaceContainer};
   border-radius: 20px;
   padding: 5px;
   box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.5);

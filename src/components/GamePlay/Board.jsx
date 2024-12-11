@@ -4,12 +4,11 @@ import Card from './Card';
 import useSound from 'use-sound';
 import flipSound from '../../assets/sounds/240776__f4ngy__card-flip.wav';
 import matchSound from '../../assets/sounds/62996__radian__chime-0019.wav';
-import gameCompleteSound from '../../assets/sounds/741977__victor_natas__victory-sting-5.wav';
 import { getImagesFromPixabay } from '../../services';
-import { GameDifficulty, GameState } from '../../utils/enumGame';
+import { GameDifficulty, GameMode, GameState } from '../../utils/enumGame';
 import styled from 'styled-components';
 
-const Board = ({ setMatchedPairs, setIsDraw }) => {
+const Board = ({ setMatchedPairs, setIsDraw, time }) => {
   const {
     selectedTheme,
     selectedDifficulty,
@@ -19,24 +18,18 @@ const Board = ({ setMatchedPairs, setIsDraw }) => {
     setCurrentPlayer,
     currentPlayer,
     gameState,
+    selectedMode,
+    setGameTime,
   } = useContext(GameContext);
   const [cards, setCards] = useState([]);
   const [flippedIndexes, setFlippedIndexes] = useState([]);
   const [playFlip] = useSound(flipSound);
   const [playMatch] = useSound(matchSound);
-  const [playGameComplete] = useSound(gameCompleteSound);
   const [allCardsFlippedOrRemoved, setAllCardsFlippedOrRemoved] =
     useState(false);
 
-  useEffect(() => {
-    const totalMatchedPairs = cards.filter(card => card.matched).length / 2;
-    setMatchedPairs(totalMatchedPairs); // Levantar el estado hacia GamePlay
-  }, [cards, setMatchedPairs]);
-
-  // Función para obtener las imágenes de Pixabay
   const fetchImages = theme => getImagesFromPixabay(theme);
 
-  // Función para mapear las imágenes a cartas
   const mapImagesToCards = images => {
     return images.map(image => ({
       emoji: image,
@@ -51,14 +44,12 @@ const Board = ({ setMatchedPairs, setIsDraw }) => {
     return 8;
   };
 
-  // Función para seleccionar las cartas basadas en el tamaño del tablero
   const selectCardsForBoardSize = (imageCards, boardSize) => {
     if (boardSize === 8) return imageCards;
     if (boardSize === 5) return imageCards.slice(0, 12);
     return imageCards.slice(0, boardSize * 2);
   };
 
-  // Función para duplicar y mezclar las cartas
   const shuffleCards = selectedCards => {
     return [...selectedCards, ...selectedCards].sort(() => Math.random() - 0.5);
   };
@@ -83,7 +74,6 @@ const Board = ({ setMatchedPairs, setIsDraw }) => {
 
   const checkMatch = ([firstIndex, secondIndex]) => {
     if (cards[firstIndex].emoji === cards[secondIndex].emoji) {
-      // Actualizar el puntaje del jugador actual
       setPlayers(prevPlayers =>
         prevPlayers.map(player =>
           player.id === players[currentPlayer - 1].id
@@ -109,12 +99,16 @@ const Board = ({ setMatchedPairs, setIsDraw }) => {
       );
       setCards(newCards);
 
-      // Cambiar el turno al otro jugador
       setCurrentPlayer(currentPlayer === 1 ? 2 : 1);
     }
 
     setFlippedIndexes([]);
   };
+
+  useEffect(() => {
+    const totalMatchedPairs = cards.filter(card => card.matched).length / 2;
+    setMatchedPairs(totalMatchedPairs);
+  }, [cards, setMatchedPairs]);
 
   useEffect(() => {
     if (selectedTheme) {
@@ -144,19 +138,21 @@ const Board = ({ setMatchedPairs, setIsDraw }) => {
   }, [cards]);
 
   useEffect(() => {
-    if (!allCardsFlippedOrRemoved) return;
+    if (allCardsFlippedOrRemoved) {
+      const player1Score = players[0].score;
+      const player2Score = players[1].score;
 
-    const player1Score = players[0].score;
-    const player2Score = players[1].score;
-
-    if (gameState !== GameState.END) {
-      if (player1Score === player2Score) {
+      if (
+        selectedMode === GameMode.MULTIPLAYER &&
+        player1Score === player2Score
+      ) {
         setIsDraw(true);
       } else {
         setGameState(GameState.END);
+        setGameTime(time);
       }
     }
-  }, [allCardsFlippedOrRemoved, players, setIsDraw, gameState]);
+  }, [allCardsFlippedOrRemoved, players, setIsDraw, gameState, setGameState]);
 
   const boardSize = getBoardSize();
 

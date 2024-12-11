@@ -1,18 +1,20 @@
 import styled from 'styled-components';
 import TimeDisplay from './TimeDisplay';
 import React from 'react';
+import PlayerEmoji from './PlayerEmoji';
+import { colors } from '../../constants/Colors';
 
-const ScoreBoard = ({ players }) => (
+const ScoreBoard = ({ players, time }) => (
   <>
     <ScoreContainer>
       {players.map((player, index) => (
         <PlayerWrapper key={index}>
-          <PlayerName currentPlayer={index}>{player.emoji}</PlayerName>
-          <PlayerScore currentPlayer={index}>{player.score}</PlayerScore>
+          <PlayerEmoji currentPlayer={player} />
+          <PlayerScore currentPlayer={player}>{player.score}</PlayerScore>
         </PlayerWrapper>
       ))}
     </ScoreContainer>
-    <TimeDisplay />
+    <TimeDisplay time={time} />
   </>
 );
 
@@ -29,29 +31,21 @@ const PlayerWrapper = styled.div`
   display: flex;
   justify-content: space-evenly;
   align-items: center;
-  width: 40%;
+  width: 35%;
 `;
 
-const Circle = styled.div`
+const PlayerScore = styled.div`
   background: ${({ currentPlayer }) =>
-    currentPlayer === 0
-      ? 'rgba(110, 181, 255, 0.8)'
-      : 'rgba(155, 89, 182, 0.8)'};
+    currentPlayer.id === 1 ? `${colors.playerOne}` : `${colors.playerTwo}`};
   border-radius: 50%;
   padding: 5px;
   border: 2px solid black;
-  width: 40px;
-  height: 40px;
+  width: 35px;
+  height: 35px;
   display: flex;
   justify-content: center;
   align-items: center;
-`;
-
-const PlayerName = styled(Circle)`
-  font-size: 1.2em;
-`;
-
-const PlayerScore = styled(Circle)`
   font-weight: bold;
   font-size: 1.4em;
+  color: #fff;
 `;

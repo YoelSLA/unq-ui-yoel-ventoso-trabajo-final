@@ -7,6 +7,7 @@ import dogImage from '../../assets/images/dog.jpg';
 import apples from '../../assets/images/apples.jpg';
 import train from '../../assets/images/train.jpg';
 import home from '../../assets/images/home.jpg';
+import { styles } from '../../constants/Styles';
 
 const GameEnd = () => {
   const {
@@ -39,7 +40,7 @@ const GameEnd = () => {
 
   return (
     <Container>
-      <Message>¡BIEN HECHO!</Message>
+      <Message>¡GOOD WELL!</Message>
       <ThemeImage
         src={selectorImage()}
         alt="Tema del juego"
@@ -58,7 +59,7 @@ const GameEnd = () => {
             setGameState(GameState.START);
             setSelectedTheme('');
           }}>
-          GO TO BACK MENU
+          GO TO MENU
         </Button>
       </ButtonGroup>
 
@@ -90,14 +91,14 @@ export const Message = styled.p`
   box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.5);
   text-align: center;
   background: linear-gradient(135deg, #6eb5ff, #9b59b6);
-  border: 2px solid #fff;
+  border: ${styles.borderSize} solid ${colors.border};
 `;
 
 export const ThemeImage = styled.img`
   width: 400px;
   height: 400px;
   border-radius: 50%;
-  border: 3px solid #fff;
+  border: ${styles.borderSize} solid ${colors.border};
 `;
 
 export const ButtonGroup = styled.div`
@@ -106,7 +107,7 @@ export const ButtonGroup = styled.div`
   padding: 10px;
   background: linear-gradient(135deg, #6eb5ff, #9b59b6);
   border-radius: 20px;
-  border: 2px solid #fff;
+  border: ${styles.borderSize} solid ${colors.border};
   display: flex;
   justify-content: center;
   align-items: center;
@@ -132,6 +133,6 @@ export const Time = styled.p`
   font-weight: bold;
   border-radius: 20px;
   padding: 15px;
-  border: 1px solid ${colors.onSurfaceContainer};
+  border: ${styles.borderSize} solid ${colors.border};
   background: linear-gradient(135deg, #6eb5ff, #9b59b6);
 `;

@@ -5,14 +5,14 @@ import { GameState, GameTheme } from './utils/enumGame';
 import GameStart from './components/GameStart';
 import GamePlay from './components/GamePlay';
 import GameEnd from './components/GameEnd';
-import tiger from './assets/images/tiger.jpg';
+import rabbit from './assets/images/rabbit.jpg';
 import fruits from './assets/images/fruits.jpg';
 import rail from './assets/images/rail.jpg';
 import house_interior from './assets/images/house_interior.jpg';
 import wallpaper from './assets/images/wallpaper.jpg';
 
 const themeImages = {
-  [GameTheme.ANIMALS]: tiger,
+  [GameTheme.ANIMALS]: rabbit,
   [GameTheme.FRUITS]: fruits,
   [GameTheme.HOUSE_INTERIOR]: house_interior,
   [GameTheme.TRANSPORT]: rail,
@@ -40,7 +40,7 @@ const Container = styled.div`
   align-items: center;
   justify-content: center;
   height: 100vh;
-  background-image: url(${props => props.backgroundImage});
+  background-image: url(${({ backgroundImage }) => backgroundImage});
   background-position: center;
   background-size: cover;
   font-family: Arial, sans-serif;

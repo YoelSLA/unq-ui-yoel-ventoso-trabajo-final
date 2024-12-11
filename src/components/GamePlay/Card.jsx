@@ -8,7 +8,7 @@ const Card = ({ emoji, flipped, removed, onClick }) => {
       onClick={onClick}
       style={{ visibility: removed ? 'hidden' : 'visible' }}
       matched={true}>
-      <CardInner className={true ? 'flipped' : ''}>
+      <CardInner className={flipped ? 'flipped' : ''}>
         <CardFront>
           <img
             src={emoji.emoji}

@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import { styles } from '../../constants/Styles';
+import { colors } from '../../constants/Colors';
 
 const CardImage = ({ img, onCardClick }) => {
   const [isHovered, setIsHovered] = useState(false);
@@ -38,5 +40,5 @@ const StyledImage = styled.img`
   border-radius: 25px;
   transition: opacity 0.3s ease;
   opacity: ${({ isHovered }) => (isHovered ? 0.8 : 1)};
-  border: 2px solid white;
+  border: ${styles.borderSize} solid ${colors.border};
 `;

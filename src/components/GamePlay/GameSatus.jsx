@@ -5,8 +5,9 @@ import ScoreBoard from './ScoreBoard';
 import { colors } from '../../constants/Colors';
 import { GameDifficulty, GameMode } from '../../utils/enumGame';
 import { GameContext } from '../../hooks/GameContext';
+import { styles } from '../../constants/Styles';
 
-const GameStatus = ({ matchedPairs }) => {
+const GameStatus = ({ matchedPairs, time }) => {
   const { selectedMode, players, selectedDifficulty } = useContext(GameContext);
 
   const totalPairs = () => {
@@ -20,9 +21,12 @@ const GameStatus = ({ matchedPairs }) => {
       matches={matchedPairs}
       totalMatches={totalPairs()}>
       {selectedMode === GameMode.MULTIPLAYER ? (
-        <ScoreBoard players={players} />
+        <ScoreBoard
+          players={players}
+          time={time}
+        />
       ) : (
-        <TimeDisplay />
+        <TimeDisplay time={time} />
       )}
     </GameStatusContainer>
   );
@@ -40,7 +44,7 @@ const GameStatusContainer = styled.div`
     return `linear-gradient(90deg, #4caf50 ${Math.max(progress - 20, 0)}%, #ffeb3b ${progress}%, #f44336 ${Math.min(progress + 20, 100)}%)`;
   }};
   padding: 5px;
-  border: 2px solid ${colors.onSurfaceContainer};
+  border: ${styles.borderSize} solid ${colors.border};
   border-radius: 20px;
   box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.5);
 `;

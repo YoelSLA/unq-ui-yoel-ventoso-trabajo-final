@@ -15,5 +15,9 @@ export const colors = {
   border: '#000',
   shadow: '#000',
   boxLeft: '#87CEFA',
-  boxRight: '#8A2BE2'
+  boxRight: '#8A2BE2',
+  text: '#FFF',
+  playerOne: '#FF55FF',
+  playerTwo: '#00AAAA'
+
 };
